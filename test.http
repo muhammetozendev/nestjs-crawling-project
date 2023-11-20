@@ -1,0 +1,21 @@
+###
+POST http://localhost/crawl
+Content-Type: application/json
+
+{
+    "url": "https://ahrefs.com/blog/seo-friendly-website/",
+    "crawler": "cheerio"
+}
+
+###
+GET http://localhost/status/76
+
+###
+GET http://localhost/jobs
+
+###
+GET http://localhost/jobs/76/output
+
+### 
+DELETE http://localhost/cancel/48
+
