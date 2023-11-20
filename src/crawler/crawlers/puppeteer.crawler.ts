@@ -5,12 +5,16 @@ import { CrawlerOutput } from '../types/crawler-output.interface';
 import { getAttributeFromElement } from '../utils/puppeteer.utils';
 import { CrawlDto } from '../dto/crawl.dto';
 import puppeteer from 'puppeteer';
+import { EvasionUtils } from '../utils/evasion.utils';
 
 @Injectable()
 export class PuppeteerCrawler implements ICrawler {
+  constructor(private readonly evasionUtils: EvasionUtils) {}
+
   async crawl(data: CrawlDto, proxyConfig?: IProxy): Promise<CrawlerOutput> {
     const browser = await puppeteer.launch({
       headless: 'new',
+      args: ['--user-agent=' + this.evasionUtils.getNextUserAgent()],
     });
 
     const page = await browser.newPage();

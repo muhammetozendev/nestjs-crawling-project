@@ -7,9 +7,12 @@ import * as cheerio from 'cheerio';
 import { CrawlDto } from '../dto/crawl.dto';
 import { SocksProxyAgent } from 'socks-proxy-agent';
 import { ProxyAgent } from 'proxy-agent';
+import { EvasionUtils } from '../utils/evasion.utils';
 
 @Injectable()
 export class CheerioCrawler implements ICrawler {
+  constructor(private readonly evasionUtils: EvasionUtils) {}
+
   async crawl(data: CrawlDto, proxyConfig?: IProxy): Promise<CrawlerOutput> {
     let agent: ProxyAgent | SocksProxyAgent;
 
@@ -46,6 +49,9 @@ export class CheerioCrawler implements ICrawler {
 
     const res = await axios.get(data.url, {
       ...(agent && { httpAgent: agent, httpsAgent: agent }), // use agent if defined
+      headers: {
+        'User-Agent': this.evasionUtils.getNextUserAgent(),
+      },
     });
     const $ = cheerio.load(res.data);
 
